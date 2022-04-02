@@ -1,0 +1,86 @@
+/*
+Name : A program for concerting a double number to its hexadecimal type.
+Copy right : Free
+Author : Wang Yubo
+Description : This program is able to read a decimal number and store it as an array.Then a function is applied to convert the number from decimal format to hexadecimal format
+one by one.
+*/
+
+
+#include<stdio.h>//include standard library stdio.h for use of scanf() and printf()
+char f(int num); //define a function in order to convert from decimalism to hexadecimal one by one
+int main(void) //define a function named main
+{
+	double n, b, l;/* define users' input as n;
+				   b is the fractional part of the number uses input;
+				   l is a median when converting the number*/
+	int i, j, k, a, c;/* i is used as a counter for the store position of the string;
+					  j is used as a counter in converting the fractional part as well;
+					  k is a number used record amount of store position;
+					  a and c are the integer parts of the number n, but a is used in converting process and after that, the value of a
+					  changes;
+					  c is used to record the integer and use it to obtain fractional part */
+
+	char string[20], s;/*define and store the number into the string[];
+					   s is defined to interchange the data in the string*/
+	printf("Please enter a double number which is between 0 and 1000:");//a hint to let uses input the number 
+
+	while (scanf("%lf", &n) != -1 && n >= 0 && n <= 1000) //get the number n from the keyboard and judge whether it is in a right format
+	{
+		c = a = (int)n;			//pass the integer part of n to a and c
+		i = j = 0;              //initialize i and j
+		if (a < 16)				//judge whether the integer of n is greater than 16
+		{
+			string[i] = f(a);   // storage the value of a into string directly
+			i++;                // move to next position
+		}
+		else
+		{
+			while (a != 0)      // judge whether all of the integer parts have already stored in the string
+			{
+				string[i] = f(a % 16);  //to obtain the remainder and storage it into string; use the function to convert a decimal number into corresponding position in "database"
+				a = a / 16;             // obtain the dividend of next loop and prepare for the division of next step
+				i++;                    // move to the next storage position
+			}
+		}
+		for (k = 0; k < i / 2; k++)		//reverse the storage position of integer, for it is in a reverse order for integer part of the double number;
+			// if i is odd, k=(i-1)/2; if i=even, k=i/2.
+		{
+			s = string[i - k - 1];
+			string[i - k - 1] = string[k];  //interchange the data store in string[i-k-1] with that in string[k]
+			string[k] = s;
+		}
+		b = n - c;						//convert the fractional part; store the fractional part to variable b
+		if (b != 0)
+		{
+			string[i] = '.';   // add a decimal point in the connection part of the integer and fractional part
+			i++;               // move to next store position
+			for (j = 0; j < 6 && b != 0; j++)// limit the significant digit to 6; the loop is to 
+			{
+				string[i + j] = f(b * 16);// store the hexadecimal format into the string after convertion by the function f()
+				/*the procedure below is the process of
+				1) use the fractional part * 16
+				2) store the integer part of the product
+				3) extrat the fractional part from procedure 2) and enter the next loop
+				*/
+				l = b;
+				b = b * 16;
+				b = b - (int)(16 * l);
+			}
+		}
+		i = i + j;// to count the total position they have already stored
+		printf("the hexadecimal form of %f is:", n);
+		for (k = 0; k < i; k++)		//a loop to output the string in order
+			printf("%c", string[k]);// print the result out and display it on the screen
+		printf("\n");
+		printf("\nPlease enter a float which is between 0 and 1000:");// a circulation to let users convert the double number continually
+
+	}
+	printf("\nIt seems that you enter a wrong number. Please try again :)\n");// when user enter number in a wrong format, it will jump out of the loop and hint this announcement.
+	return 0;//return to the main function 
+}
+char f(int num)// define the function
+{
+	char database[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };// the function is used to convert each number from decimal number to hexadecimal format.
+	return database[num];//return the value to the function f() 
+}
